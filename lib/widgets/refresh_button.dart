@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/provider/button_state_provider.dart';
+import 'package:jobscope/provider/self_applied_companies_provider.dart';
 import 'package:provider/provider.dart';
 
 Widget refreshButton(BuildContext context) {
@@ -12,7 +13,9 @@ Widget refreshButton(BuildContext context) {
         hoverColor: AppColors.secondaryColor,
         highlightColor: AppColors.secondaryColor,
         iconSize: 20,
-        onPressed: () {},
+        onPressed: () {
+          context.read<SelfAppliedCompaniesProvider>().fechDataFromSheet();
+        },
         icon: Icon(
           Icons.refresh,
           color: context.watch<ButtonsStateProvider>().isRefreshButtonHovered ?  AppColors.primaryColor : AppColors.secondaryColor,

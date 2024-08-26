@@ -15,26 +15,23 @@ class GoogleSheet {
       Spreadsheet spreadSheet, String title) async {
     var worksheet = spreadSheet.worksheetByTitle(title);
     if (worksheet == null) {
-      print('Worksheet with title $title not found');
     }
     return worksheet;
   }
 
   static Future<List<SelfAppliedCompaniesModel>> getAll() async {
     if (selfAppliedCompanies == null) {
-      print('Worksheet not initialized');
       return [];
     }
 
     final data = await selfAppliedCompanies!.values.map.allRows();
     if (data == null) {
-      print('No data found in the worksheet');
       return [];
     }
 
     List<SelfAppliedCompaniesModel> companies = data.map((row) {
       return SelfAppliedCompaniesModel.fromJson(row);
     }).toList();
-    return companies;
+    return companies.reversed.toList();
   }
 }

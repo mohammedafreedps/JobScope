@@ -12,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GoogleSheet.initialiseGoogleSheet(); 
   doWhenWindowReady((){
-    var initialFrameSize = Size(800, 500);
+    var initialFrameSize = const Size(800, 500);
     appWindow.size = initialFrameSize;
     appWindow.minSize = initialFrameSize;
     appWindow.title = 'JobScope';
@@ -32,12 +32,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context)=>ButtonsStateProvider()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: AppColors.primaryColor,
           primaryColor: const Color(0xFFF6F4EB),
           fontFamily: GoogleFonts.redHatDisplay().fontFamily
         ),
-        home: HomeScreen(),
+        home: const HomeScreen(),
       ),
     );
   }

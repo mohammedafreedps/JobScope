@@ -8,6 +8,7 @@ class SelfAppliedCompaniesModel {
   String contactPersonNumber;
   String callRecording;
   String remarks;
+  bool showRemark;
 
   SelfAppliedCompaniesModel({
     required this.date,
@@ -19,9 +20,9 @@ class SelfAppliedCompaniesModel {
     required this.contactPersonNumber,
     required this.callRecording,
     required this.remarks,
+    required this.showRemark
   });
 
-  // From JSON constructor
   factory SelfAppliedCompaniesModel.fromJson(Map<String, dynamic> json) {
     return SelfAppliedCompaniesModel(
       date: json['Date'] ?? '',
@@ -33,6 +34,7 @@ class SelfAppliedCompaniesModel {
       contactPersonNumber: json['Contact person  number'] ?? '',
       callRecording: json['Call Recording'] ?? '',
       remarks: json['Remarks'] ?? '',
+      showRemark: false
     );
   }
 }
