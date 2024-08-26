@@ -9,6 +9,10 @@ Widget refreshButton(BuildContext context) {
     onEnter: (_)=> context.read<ButtonsStateProvider>().refreshButtonHovered(),
     onExit:(_)=> context.read<ButtonsStateProvider>().refreshButtonHovered(),
     child: IconButton(
+      style: IconButton.styleFrom(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        padding: EdgeInsets.zero
+      ),
         padding: const EdgeInsets.all(0),
         hoverColor: AppColors.secondaryColor,
         highlightColor: AppColors.secondaryColor,

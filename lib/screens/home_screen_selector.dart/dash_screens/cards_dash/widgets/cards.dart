@@ -43,7 +43,7 @@ Widget cards(
                             .setShowRemark(index);
                       },
                       icon: Icon(
-                        Icons.arrow_outward_sharp,
+                        Icons.arrow_back_outlined,
                         color: AppColors.greyColor,
                       ))
                 ],
