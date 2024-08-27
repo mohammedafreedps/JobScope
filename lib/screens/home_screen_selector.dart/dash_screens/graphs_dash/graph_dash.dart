@@ -1,10 +1,84 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class GraphDash extends StatelessWidget {
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:jobscope/app_styles/app_styles.dart';
+import 'package:jobscope/provider/self_applied_companies_provider.dart';
+import 'package:jobscope/utils/create_chart_side_lable.dart';
+import 'package:provider/provider.dart';
+
+class GraphDash extends StatefulWidget {
   const GraphDash({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
+  State<GraphDash> createState() => _GraphDashState();
+}
+
+class _GraphDashState extends State<GraphDash> {
+  @override
+  void initState() {
+    Timer(const Duration(seconds: 1), () {
+      context.read<SelfAppliedCompaniesProvider>().setUpGraphData();
+    });
+    super.initState();
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child:
+                    PieChart(PieChartData(sections: showingSections(context))),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.04,
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: createChartSideLable()),
+              )
+            ],
+          ),
+          SizedBox(height: 10,),
+          const Divider()
+        ],
+      ),
+    );
+  }
+}
+
+List<PieChartSectionData> showingSections(BuildContext context) {
+  return List.generate(
+      context.watch<SelfAppliedCompaniesProvider>().pieChartPercentage.length,
+      (i) {
+    return PieChartSectionData(
+        borderSide: BorderSide(width: 2, color: AppColors.greyColor),
+        color: StatusColors.statusColors[i],
+        value: context
+            .watch<SelfAppliedCompaniesProvider>()
+            .pieChartPercentage[i], // Value for the section
+        title: context
+            .watch<SelfAppliedCompaniesProvider>()
+            .pieChartPercentage[i] > 1 ?  ' ${context
+                .watch<SelfAppliedCompaniesProvider>()
+                .pieChartPercentage[i]
+                .round()
+                .toString()} %' : '', // Title for the section
+        radius: 150,
+        titleStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: AppColors.primaryColor,
+        ));
+  });
 }

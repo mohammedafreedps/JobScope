@@ -32,6 +32,6 @@ class GoogleSheet {
     List<SelfAppliedCompaniesModel> companies = data.map((row) {
       return SelfAppliedCompaniesModel.fromJson(row);
     }).toList();
-    return companies.reversed.toList();
+    return companies.where((item)=> item.companyName.isNotEmpty).toList().reversed.toList();
   }
 }

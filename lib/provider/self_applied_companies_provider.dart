@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jobscope/constants/graph_dash_values.dart';
 import 'package:jobscope/models/self_applied_companies_model.dart';
 import 'package:jobscope/services/googe_sheet.dart';
 
@@ -8,6 +9,13 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
   List<SelfAppliedCompaniesModel> selfAppliedCompaniesList = [];
   List<SelfAppliedCompaniesModel> _selfAppliedCompaniesList = [];
   Timer? _debounce;
+
+  int totalAppliedCompany = 0;
+
+  List<int> statusCounts = [];
+
+  List<double> pieChartPercentage = [];
+
   void fechDataFromSheet() async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -41,8 +49,28 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
     }
   }
 
-  void setShowRemark(int index){
-    selfAppliedCompaniesList[index].showRemark = !selfAppliedCompaniesList[index].showRemark;
+  void setShowRemark(int index) {
+    selfAppliedCompaniesList[index].showRemark =
+        !selfAppliedCompaniesList[index].showRemark;
     notifyListeners();
   }
+
+void setUpGraphData() {
+  statusCounts = []; 
+  totalAppliedCompany = _selfAppliedCompaniesList.length;
+  pieChartPercentage = [];
+
+  for (var i = 0; i < status.length; i++) {
+    List matchingItems = _selfAppliedCompaniesList
+        .where((item) => item.currentStatus.trim().toLowerCase() == status[i].trim().toLowerCase())
+        .toList();
+    
+    statusCounts.add(matchingItems.length);
+  }
+  for (var i = 0; i < statusCounts.length; i++) {
+    double holdValue = (statusCounts[i] / totalAppliedCompany) * 100;
+    pieChartPercentage.add(holdValue);
+  }
+  notifyListeners();
+}
 }
