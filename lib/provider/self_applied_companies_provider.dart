@@ -26,6 +26,10 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
 
   List<double> todayPieChartPercentage = [];
 
+  int todayAppliedCompany = 0;
+  int todayCalledCompany = 0;
+  bool isGoalAchived = false;
+
   void fechDataFromSheet() async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -122,6 +126,33 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
             (todayStatusCounts[i] / todayTotalAppliedCompany) * 100;
         todayPieChartPercentage.add(holdValue);
       }
+      notifyListeners();
+    }
+  }
+
+  void setGoalCount() {
+    _todayAppliedCompaniesList = _selfAppliedCompaniesList
+        .where((item) =>
+            item.date ==
+            dateTimeToGoogleSheetsSerialNumber(DateTime.now()).toString())
+        .toList();
+    todayAppliedCompany = _selfAppliedCompaniesList
+        .where((item) =>
+            item.date ==
+            dateTimeToGoogleSheetsSerialNumber(DateTime.now()).toString())
+        .toList()
+        .length;
+    todayCalledCompany = _todayAppliedCompaniesList
+        .where((item) =>
+            item.date ==
+            dateTimeToGoogleSheetsSerialNumber(DateTime.now()).toString() && item.callRecording.isNotEmpty)
+        .toList()
+        .length;
+    if(todayAppliedCompany >= 10 && todayCalledCompany >= 2){
+      isGoalAchived = true;
+      notifyListeners();
+    }else{
+      isGoalAchived = false;
       notifyListeners();
     }
   }

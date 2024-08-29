@@ -34,6 +34,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: AppColors.greyColor,
+            selectionColor: AppColors.greyColor,
+            selectionHandleColor: AppColors.greyColor
+          ),
           scaffoldBackgroundColor: AppColors.primaryColor,
           primaryColor: const Color(0xFFF6F4EB),
           fontFamily: GoogleFonts.redHatDisplay().fontFamily

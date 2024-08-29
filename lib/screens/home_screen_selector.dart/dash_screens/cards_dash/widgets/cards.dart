@@ -25,7 +25,7 @@ Widget cards(
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              Text(
+              SelectableText(
                 remarks,
                 style: TextStyle(color: AppColors.primaryColor),
               ),
@@ -63,11 +63,11 @@ Widget cards(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  SelectableText(
                     'Date: ${exelDateConvertor(int.tryParse(date) ?? 1)}',
                     style: TextStyle(color: AppColors.primaryColor),
                   ),
-                  Text(
+                  SelectableText(
                     'Connected Date: ${exelDateConvertor(int.tryParse(connectedDate) ?? 1)}',
                     style: TextStyle(color: AppColors.primaryColor),
                   )
@@ -76,12 +76,12 @@ Widget cards(
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(companyName,
+                  SelectableText(companyName,
                       style: TextStyle(
                           color: AppColors.primaryColor,
                           fontSize: 30,
                           fontWeight: FontWeight.bold)),
-                  Text('Email: $email',
+                  SelectableText('Email: $email',
                       style: TextStyle(color: AppColors.primaryColor)),
                 ],
               ),
@@ -89,11 +89,11 @@ Widget cards(
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Contact Person: $contactedPerson',
+                  SelectableText('Contact Person: $contactedPerson',
                       style: TextStyle(color: AppColors.primaryColor)),
                   Row(
                     children: [
-                      Text('Contact Number: $contactNumber',
+                      SelectableText('Contact Number: $contactNumber',
                           style: TextStyle(color: AppColors.primaryColor)),
                       const SizedBox(
                         width: 10,

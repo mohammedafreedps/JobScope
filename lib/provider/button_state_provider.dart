@@ -5,20 +5,38 @@ class ButtonsStateProvider extends ChangeNotifier {
 
   bool isCardsSelected = true;
   bool isGraphsSelected = false;
+  bool isGoalSelected = false;
 
-  void refreshButtonHovered(){
+  void refreshButtonHovered() {
     isRefreshButtonHovered = !isRefreshButtonHovered;
     notifyListeners();
   }
 
-  void cardsButtonClicked(){
-    isGraphsSelected = !isGraphsSelected;
-    isCardsSelected = !isCardsSelected;
-    notifyListeners();
+void cardsButtonClicked() {
+  if (!isCardsSelected) {
+    isGraphsSelected = false;
+    isGoalSelected = false;
   }
-  void graphButtonClicked(){
-    isCardsSelected = !isCardsSelected;
-    isGraphsSelected = !isGraphsSelected;
-    notifyListeners();
+  isCardsSelected = !isCardsSelected; 
+  notifyListeners();
+}
+
+void graphButtonClicked() {
+  if (!isGraphsSelected) {
+    isCardsSelected = false;
+    isGoalSelected = false;
   }
+  isGraphsSelected = !isGraphsSelected;
+  notifyListeners();
+}
+
+void goalButtonClicked() {
+  if (!isGoalSelected) {
+    isCardsSelected = false;
+    isGraphsSelected = false;
+  }
+  isGoalSelected = !isGoalSelected;
+  notifyListeners();
+}
+
 }
