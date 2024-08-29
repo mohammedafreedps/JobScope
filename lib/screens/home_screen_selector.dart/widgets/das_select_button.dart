@@ -4,7 +4,7 @@ import 'package:jobscope/app_styles/app_styles.dart';
 Widget dashSelectButton({required String label,required bool isSelected,Function? function}){
   return InkWell(
     onTap: (){
-      if(function != null){
+      if(function != null && !isSelected){
         function();
       }
     },

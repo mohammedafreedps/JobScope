@@ -28,7 +28,7 @@ void initState() {
         children: [
           topBar(context),
           context.watch<SelfAppliedCompaniesProvider>().isCardDataLoading
-              ? const Text('Loading....')
+              ?  const Expanded(child:  Center(child: Text('Loading....')))
               : homeScreenSelector(context)
         ],
       ),
