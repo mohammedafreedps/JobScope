@@ -43,7 +43,7 @@ class _GoalDashState extends State<GoalDash> {
               height: 30,
             ),
             const Text(
-              'Daily Target',
+              'Daily Goal',
               style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
