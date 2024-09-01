@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/provider/self_applied_companies_provider.dart';
+import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/add_bottom_sheet.dart';
+import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/delete_alert_dialog.dart';
 import 'package:jobscope/services/exel_date_convertor.dart';
 import 'package:provider/provider.dart';
 
 Widget cards(
-    {required BuildContext context,
+    {
+      required BuildContext context,
     required int index,
     required String companyName,
     required String date,
@@ -16,7 +19,7 @@ Widget cards(
     required String contactNumber,
     required bool isRecorded,
     required String remarks,
-    required bool showRemark}) {
+    required bool showRemark,required int rowIndex}) {
   return showRemark
       ? Container(
           decoration: BoxDecoration(
@@ -118,22 +121,47 @@ Widget cards(
               ),
               const Divider(),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Remark',
-                    style: TextStyle(color: AppColors.greyColor),
+
+                  Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            addBottomSheet(context,index: index,isToEdit: true);
+                          },
+                          icon: Icon(
+                            Icons.edit,
+                            color: AppColors.greyColor,
+                          )),
+                      IconButton(
+                          onPressed: () {
+                            deleteAlertDialog(context,rowIndex);
+                          },
+                          icon: Icon(
+                            Icons.delete,
+                            color: AppColors.greyColor,
+                          )),
+                    ],
                   ),
-                  IconButton(
-                      onPressed: () {
-                        context
-                            .read<SelfAppliedCompaniesProvider>()
-                            .setShowRemark(index);
-                      },
-                      icon: Icon(
-                        Icons.arrow_outward_sharp,
-                        color: AppColors.greyColor,
-                      ))
+                  Row(
+                    children: [
+                      Text(
+                        'Remark',
+                        style: TextStyle(color: AppColors.greyColor),
+                      ),
+                      IconButton(
+                          onPressed: () {
+                            context
+                                .read<SelfAppliedCompaniesProvider>()
+                                .setShowRemark(index);
+                          },
+                          icon: Icon(
+                            Icons.arrow_outward_sharp,
+                            color: AppColors.greyColor,
+                          ))
+                    ],
+                  ),
                 ],
               )
             ],

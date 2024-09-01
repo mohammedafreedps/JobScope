@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AppColors {
   static Color primaryColor = const Color(0xFFF6F4EB);
   static Color secondaryColor = const Color.fromARGB(255, 30, 32, 30);
-  static Color dangerColor = const Color(0xFFFF8989);
+  static Color dangerColor = const Color.fromARGB(255, 255, 137, 137);
   static Color greyColor = const Color.fromARGB(255, 104, 109, 118);
   static Color success = const Color(0xFFFA1C398);
 }
@@ -39,4 +39,8 @@ class StatusColors {
   static Color color12 = const Color.fromARGB(255, 83, 67, 64);
   static Color color13 = const Color.fromARGB(255, 65, 21, 48);
   static Color color14 = const Color.fromARGB(255, 22, 22, 22);
+}
+
+class StatusColorsForSheet {
+  static Map<String, double> testColor = {'a':255, 'r': 255, 'g': 137, 'b': 137};
 }

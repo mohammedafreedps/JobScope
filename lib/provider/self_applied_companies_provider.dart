@@ -30,6 +30,15 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
   int todayCalledCompany = 0;
   bool isGoalAchived = false;
 
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController emailIdController = TextEditingController();
+  TextEditingController contactedPersonNameController = TextEditingController();
+  TextEditingController contactedPersonNumberController =
+      TextEditingController();
+  TextEditingController callRecordingLinkController = TextEditingController();
+  TextEditingController remarksController = TextEditingController();
+  String currentStatus = 'No response after application';
+
   void fechDataFromSheet() async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -37,10 +46,8 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
       try {
         isCardDataLoading = true;
         notifyListeners();
-
         _selfAppliedCompaniesList = await GoogleSheet.getAll();
         selfAppliedCompaniesList = _selfAppliedCompaniesList;
-
         isCardDataLoading = false;
         notifyListeners();
       } catch (e) {
@@ -48,6 +55,15 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
         notifyListeners();
       }
     });
+  }
+
+  void reloadDelaidWithoutLodingIndication() async {
+    await Future.delayed(const Duration(seconds: 2));
+    _selfAppliedCompaniesList = await GoogleSheet.getAll();
+    selfAppliedCompaniesList = _selfAppliedCompaniesList;
+    setUpGrandGraphData();
+    setGoalCount();
+    notifyListeners();
   }
 
   void searchByTitle(String query) {
@@ -145,15 +161,79 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
     todayCalledCompany = _todayAppliedCompaniesList
         .where((item) =>
             item.date ==
-            dateTimeToGoogleSheetsSerialNumber(DateTime.now()).toString() && item.callRecording.isNotEmpty)
+                dateTimeToGoogleSheetsSerialNumber(DateTime.now()).toString() &&
+            item.callRecording.isNotEmpty)
         .toList()
         .length;
-    if(todayAppliedCompany >= 10 && todayCalledCompany >= 2){
+    if (todayAppliedCompany >= 10 && todayCalledCompany >= 2) {
       isGoalAchived = true;
       notifyListeners();
-    }else{
+    } else {
       isGoalAchived = false;
       notifyListeners();
     }
+  }
+
+  void setCurrentStatus(String? value) {
+    if (value != null) {
+      currentStatus = value;
+    }
+    notifyListeners();
+  }
+
+  void appendRowToSheet() {
+    GoogleSheet.appendData([
+      '',
+      companyNameController.text,
+      emailIdController.text,
+      currentStatus,
+      '',
+      contactedPersonNameController.text,
+      contactedPersonNumberController.text,
+      callRecordingLinkController.text,
+      remarksController.text
+    ]);
+  }
+
+  void deleteRowFromSheet(int rowIndex) {
+    GoogleSheet.deleteRow(rowIndex);
+    reloadDelaidWithoutLodingIndication();
+  }
+
+  void updateRowFromSheet(int index, bool setEditable) {
+    if (setEditable) {
+      companyNameController.text = selfAppliedCompaniesList[index].companyName;
+      emailIdController.text = selfAppliedCompaniesList[index].emailId;
+      currentStatus = selfAppliedCompaniesList[index].currentStatus;
+      contactedPersonNameController.text =
+          selfAppliedCompaniesList[index].contactPersonName;
+      contactedPersonNumberController.text =
+          selfAppliedCompaniesList[index].contactPersonNumber;
+      callRecordingLinkController.text =
+          selfAppliedCompaniesList[index].callRecording;
+      remarksController.text = selfAppliedCompaniesList[index].remarks;
+    } else {
+      GoogleSheet.editRow(selfAppliedCompaniesList[index].rowNumber, [
+        '',
+        companyNameController.text,
+        emailIdController.text,
+        currentStatus,
+        '',
+        contactedPersonNameController.text,
+        contactedPersonNumberController.text,
+        callRecordingLinkController.text,
+        remarksController.text
+      ]);
+    }
+  }
+
+  void clearInputs() {
+    companyNameController.clear();
+    emailIdController.clear();
+    currentStatus = 'No response after application';
+    contactedPersonNameController.clear();
+    contactedPersonNumberController.clear();
+    callRecordingLinkController.clear();
+    remarksController.clear();
   }
 }

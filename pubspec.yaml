@@ -41,6 +41,8 @@ dependencies:
   bitsdojo_window: ^0.1.6
   intl: ^0.19.0
   fl_chart: ^0.68.0
+  googleapis: ^11.4.0
+  googleapis_auth: ^1.6.0
 
 dev_dependencies:
   flutter_test:

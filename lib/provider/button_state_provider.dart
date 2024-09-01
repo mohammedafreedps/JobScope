@@ -12,31 +12,31 @@ class ButtonsStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-void cardsButtonClicked() {
-  if (!isCardsSelected) {
-    isGraphsSelected = false;
-    isGoalSelected = false;
+  void cardsButtonClicked() {
+    if (!isCardsSelected) {
+      isGraphsSelected = false;
+      isGoalSelected = false;
+    }
+    isCardsSelected = !isCardsSelected;
+    notifyListeners();
   }
-  isCardsSelected = !isCardsSelected; 
-  notifyListeners();
-}
 
-void graphButtonClicked() {
-  if (!isGraphsSelected) {
-    isCardsSelected = false;
-    isGoalSelected = false;
+  void graphButtonClicked() {
+    if (!isGraphsSelected) {
+      isCardsSelected = false;
+      isGoalSelected = false;
+    }
+    isGraphsSelected = !isGraphsSelected;
+    notifyListeners();
   }
-  isGraphsSelected = !isGraphsSelected;
-  notifyListeners();
-}
 
-void goalButtonClicked() {
-  if (!isGoalSelected) {
-    isCardsSelected = false;
-    isGraphsSelected = false;
+  void goalButtonClicked() {
+    if (!isGoalSelected) {
+      isCardsSelected = false;
+      isGraphsSelected = false;
+    }
+    isGoalSelected = !isGoalSelected;
+    notifyListeners();
   }
-  isGoalSelected = !isGoalSelected;
-  notifyListeners();
-}
 
 }

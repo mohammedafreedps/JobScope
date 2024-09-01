@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/provider/self_applied_companies_provider.dart';
+import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/add_bottom_sheet.dart';
 import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/cards.dart';
 import 'package:provider/provider.dart';
 
@@ -33,23 +34,35 @@ class CardsDash extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          SizedBox(
-            width: 400,
-            child: TextField(
-              onChanged: (value) => context
-                  .read<SelfAppliedCompaniesProvider>()
-                  .searchByTitle(value),
-              cursorColor: AppColors.secondaryColor,
-              decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: AppColors.secondaryColor,
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.secondaryColor)),
-                  disabledBorder: InputBorder.none),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(),
+              SizedBox(
+                width: 400,
+                child: TextField(
+                  onChanged: (value) => context
+                      .read<SelfAppliedCompaniesProvider>()
+                      .searchByTitle(value),
+                  cursorColor: AppColors.secondaryColor,
+                  decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: AppColors.secondaryColor,
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: AppColors.secondaryColor)),
+                      disabledBorder: InputBorder.none),
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    addBottomSheet(context);
+                  },
+                  icon: const Icon(Icons.add))
+            ],
           ),
           const SizedBox(
             height: 20,
@@ -68,50 +81,53 @@ class CardsDash extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 return cards(
-                  index: index,
-                  context: context,
-                  companyName: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .companyName,
-                  date: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .date,
-                  status: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .currentStatus,
-                  email: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .emailId,
-                  connectedDate: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .companyConnectedDate,
-                  contactedPerson: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .contactPersonName,
-                  contactNumber: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .contactPersonNumber,
-                  isRecorded: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .callRecording
-                      .isNotEmpty,
-                  showRemark: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .showRemark,
-                  remarks: context
-                      .watch<SelfAppliedCompaniesProvider>()
-                      .selfAppliedCompaniesList[index]
-                      .remarks,
-                );
+                    index: index,
+                    context: context,
+                    companyName: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .companyName,
+                    date: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .date,
+                    status: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .currentStatus,
+                    email: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .emailId,
+                    connectedDate: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .companyConnectedDate,
+                    contactedPerson: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .contactPersonName,
+                    contactNumber: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .contactPersonNumber,
+                    isRecorded: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .callRecording
+                        .isNotEmpty,
+                    showRemark: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .showRemark,
+                    remarks: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .remarks,
+                    rowIndex: context
+                        .watch<SelfAppliedCompaniesProvider>()
+                        .selfAppliedCompaniesList[index]
+                        .rowNumber);
               },
             ),
           ),
