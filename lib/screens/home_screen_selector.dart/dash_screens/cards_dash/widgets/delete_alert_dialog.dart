@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/provider/self_applied_companies_provider.dart';
+import 'package:jobscope/widgets/snak_bar.dart';
 import 'package:provider/provider.dart';
 
 Future deleteAlertDialog(BuildContext context,int rowIndex) {
@@ -23,6 +24,8 @@ Future deleteAlertDialog(BuildContext context,int rowIndex) {
               TextButton(
                   onPressed: () {
                     context.read<SelfAppliedCompaniesProvider>().deleteRowFromSheet(rowIndex);
+                    SnackbarHelper(context: context).showSnackbar(message: 'Loading...');
+                    context.read<SelfAppliedCompaniesProvider>().reloadDelaidWithoutLodingIndication();
                     Navigator.of(context).pop();
                   },
                   child: Text(

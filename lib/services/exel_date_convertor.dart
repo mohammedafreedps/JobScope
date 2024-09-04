@@ -7,7 +7,7 @@ String exelDateConvertor(int serialDateNumber) {
 
   final DateTime date = baseDate.add(Duration(days: daysSinceBase));
 
-  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  final DateFormat formatter = DateFormat('dd-MMM-yyyy');
   if (serialDateNumber != 1) {
     return formatter.format(date);
   }else{

@@ -17,7 +17,7 @@ class _GoalDashState extends State<GoalDash> {
 
   @override
   void initState() {
-    _timer = Timer(Duration(seconds: 1), () {
+    _timer = Timer(const Duration(milliseconds: 500), () {
       context.read<SelfAppliedCompaniesProvider>().setGoalCount();
     });
     super.initState();

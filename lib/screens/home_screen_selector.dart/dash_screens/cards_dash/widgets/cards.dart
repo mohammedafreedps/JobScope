@@ -4,11 +4,11 @@ import 'package:jobscope/provider/self_applied_companies_provider.dart';
 import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/add_bottom_sheet.dart';
 import 'package:jobscope/screens/home_screen_selector.dart/dash_screens/cards_dash/widgets/delete_alert_dialog.dart';
 import 'package:jobscope/services/exel_date_convertor.dart';
+import 'package:jobscope/services/url_launcher.dart';
 import 'package:provider/provider.dart';
 
 Widget cards(
-    {
-      required BuildContext context,
+    {required BuildContext context,
     required int index,
     required String companyName,
     required String date,
@@ -19,7 +19,8 @@ Widget cards(
     required String contactNumber,
     required bool isRecorded,
     required String remarks,
-    required bool showRemark,required int rowIndex}) {
+    required bool showRemark,
+    required int rowIndex}) {
   return showRemark
       ? Container(
           decoration: BoxDecoration(
@@ -84,8 +85,22 @@ Widget cards(
                           color: AppColors.primaryColor,
                           fontSize: 30,
                           fontWeight: FontWeight.bold)),
-                  SelectableText('Email: $email',
-                      style: TextStyle(color: AppColors.primaryColor)),
+                  Row(
+                    children: [
+                      SelectableText('Email: $email',
+                          style: TextStyle(color: AppColors.primaryColor)),
+                      email.isNotEmpty
+                          ? IconButton(
+                              onPressed: () {
+                                UrlLauncher.sentEmail(email);
+                              },
+                              icon: Icon(
+                                Icons.mail,
+                                color: AppColors.greyColor,
+                              ))
+                          : Container()
+                    ],
+                  ),
                 ],
               ),
               const Divider(),
@@ -102,11 +117,18 @@ Widget cards(
                         width: 10,
                       ),
                       isRecorded
-                          ? Icon(
-                              Icons.mic,
-                              color: AppColors.dangerColor,
-                              size: 15,
-                            )
+                          ? IconButton(
+                              onPressed: () {
+                                UrlLauncher.urlLaunch(context
+                                    .read<SelfAppliedCompaniesProvider>()
+                                    .selfAppliedCompaniesList[index]
+                                    .callRecording);
+                              },
+                              icon: Icon(
+                                Icons.mic,
+                                color: AppColors.dangerColor,
+                                size: 15,
+                              ))
                           : Container()
                     ],
                   ),
@@ -123,12 +145,12 @@ Widget cards(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
                   Row(
                     children: [
                       IconButton(
                           onPressed: () {
-                            addBottomSheet(context,index: index,isToEdit: true);
+                            addBottomSheet(context,
+                                index: index, isToEdit: true);
                           },
                           icon: Icon(
                             Icons.edit,
@@ -136,7 +158,7 @@ Widget cards(
                           )),
                       IconButton(
                           onPressed: () {
-                            deleteAlertDialog(context,rowIndex);
+                            deleteAlertDialog(context, rowIndex);
                           },
                           icon: Icon(
                             Icons.delete,

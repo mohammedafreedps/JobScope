@@ -46,9 +46,15 @@ class GoogleSheet {
         .toList();
   }
 
-  static void appendData(List<String> datas) {
+  static  Future<int?> appendData(List<String> datas) async {
     if (selfAppliedCompanies != null) {
-      selfAppliedCompanies!.values.appendRow(datas);
+      await selfAppliedCompanies!.values.appendRow(datas);
+      final _addedRow = await getAll();
+      if(_addedRow.isNotEmpty){
+        return _addedRow[0].rowNumber;
+      }else{
+        return null;
+      }
     }
   }
 
@@ -64,7 +70,7 @@ class GoogleSheet {
     }
   }
 
-  static void setColorToARow(int row, Map<String, double> color) async {
+  static void setColorToARow(int rowIndex, Map<String, double> color) async {
     final cruden = ServiceAccountCredentials.fromJson(SheetsApi.credentials);
     final scopes = [sheets.SheetsApi.spreadsheetsScope];
     final client = await clientViaServiceAccount(cruden, scopes);
@@ -74,18 +80,18 @@ class GoogleSheet {
         repeatCell: sheets.RepeatCellRequest(
           range: sheets.GridRange(
             sheetId: 1772288334,
-            startRowIndex: row - 1,
-            endRowIndex: row,
+            startRowIndex: rowIndex - 1,
+            endRowIndex: rowIndex,
             startColumnIndex: 0,
             endColumnIndex: null,
           ),
           cell: sheets.CellData(
             userEnteredFormat: sheets.CellFormat(
               backgroundColor: sheets.Color(
-                alpha: color['a'],
-                red: color['r'],
-                green: color['g'],
-                blue: color['b'],
+                alpha: color['a']! / 255.0,
+                red: color['r']! / 255.0,
+                green: color['g']! / 255.0,
+                blue: color['b']! / 255.0,
               ),
             ),
           ),

@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 
 Widget refreshButton(BuildContext context) {
   return MouseRegion(
-    onEnter: (_)=> context.read<ButtonsStateProvider>().refreshButtonHovered(),
-    onExit:(_)=> context.read<ButtonsStateProvider>().refreshButtonHovered(),
+    onEnter: (_) => context.read<ButtonsStateProvider>().refreshButtonHovered(),
+    onExit: (_) => context.read<ButtonsStateProvider>().refreshButtonHovered(),
     child: IconButton(
-      style: IconButton.styleFrom(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        padding: EdgeInsets.zero
-      ),
+        style: IconButton.styleFrom(
+            shape:
+                const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+            padding: EdgeInsets.zero),
         padding: const EdgeInsets.all(0),
         hoverColor: AppColors.secondaryColor,
         highlightColor: AppColors.secondaryColor,
@@ -22,7 +22,9 @@ Widget refreshButton(BuildContext context) {
         },
         icon: Icon(
           Icons.refresh,
-          color: context.watch<ButtonsStateProvider>().isRefreshButtonHovered ?  AppColors.primaryColor : AppColors.secondaryColor,
+          color: context.watch<ButtonsStateProvider>().isRefreshButtonHovered
+              ? AppColors.primaryColor
+              : AppColors.secondaryColor,
         )),
   );
 }

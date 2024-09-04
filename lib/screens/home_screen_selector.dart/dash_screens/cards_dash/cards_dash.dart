@@ -41,6 +41,7 @@ class CardsDash extends StatelessWidget {
               SizedBox(
                 width: 400,
                 child: TextField(
+                  controller: context.read<SelfAppliedCompaniesProvider>().searchController,
                   onChanged: (value) => context
                       .read<SelfAppliedCompaniesProvider>()
                       .searchByTitle(value),
@@ -59,6 +60,7 @@ class CardsDash extends StatelessWidget {
               ),
               IconButton(
                   onPressed: () {
+                    context.read<SelfAppliedCompaniesProvider>().setCreatedDateToday();
                     addBottomSheet(context);
                   },
                   icon: const Icon(Icons.add))

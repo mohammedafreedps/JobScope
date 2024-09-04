@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<SelfAppliedCompaniesProvider>().fechDataFromSheet();
-    _timer = Timer(const Duration(seconds: 1), () {
+    _timer = Timer(const Duration(milliseconds: 500), () {
       context.read<SelfAppliedCompaniesProvider>().setGoalCount();
     });
   }

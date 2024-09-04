@@ -18,7 +18,7 @@ class _GraphDashState extends State<GraphDash> {
   Timer? _timer;
   @override
   void initState() {
-    _timer = Timer(const Duration(seconds: 1), () {
+    _timer = Timer(const Duration(milliseconds: 500), () {
       context.read<SelfAppliedCompaniesProvider>().setUpGrandGraphData();
     });
     super.initState();

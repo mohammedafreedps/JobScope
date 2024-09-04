@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/constants/graph_dash_values.dart';
 import 'package:jobscope/provider/self_applied_companies_provider.dart';
+import 'package:jobscope/widgets/snak_bar.dart';
 import 'package:provider/provider.dart';
 
 Future addBottomSheet(
@@ -48,11 +49,17 @@ Widget _bottomSheetContent(BuildContext context, bool isToEdit, int? index) {
           const SizedBox(
             height: 40,
           ),
-          _addSectionButton(context, 'Set Current Date'),
+          SizedBox(
+            height: 100,
+            child: _datePickerTextField(context,false),
+          ),
           const SizedBox(
             height: 20,
           ),
-          _addSectionButton(context, 'Set Company Contacted Date'),
+         SizedBox(
+          height: 100,
+          child: _datePickerTextField(context,true),
+         ),
           const SizedBox(
             height: 20,
           ),
@@ -99,7 +106,7 @@ Widget _bottomSheetContent(BuildContext context, bool isToEdit, int? index) {
           ),
           DropdownButtonFormField(
               decoration: InputDecoration(
-                hintText: 'Current Status',
+                hintText: 'Select Current Status',
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: AppColors.secondaryColor),
                 ),
@@ -108,6 +115,7 @@ Widget _bottomSheetContent(BuildContext context, bool isToEdit, int? index) {
               dropdownColor: AppColors.primaryColor,
               items: _dropDownMenuItems(),
               onChanged: (value) {
+                print(value);
                 context
                     .read<SelfAppliedCompaniesProvider>()
                     .setCurrentStatus(value);
@@ -139,6 +147,28 @@ Widget _textField(String text, TextEditingController controller,
   );
 }
 
+Widget _datePickerTextField(BuildContext context ,bool isCompanyConectedDateField){
+  return TextField(
+    onTap: (){
+      if(isCompanyConectedDateField){
+        context.read<SelfAppliedCompaniesProvider>().setCompanyConnectedDate(context);
+      }else{
+        context.read<SelfAppliedCompaniesProvider>().setCreateDateCustom(context);
+      }
+    },
+    readOnly: true,
+    controller: isCompanyConectedDateField ? context.watch<SelfAppliedCompaniesProvider>().companyConnectedDateController : context.watch<SelfAppliedCompaniesProvider>().createdDateController,
+    cursorColor: AppColors.secondaryColor,
+    decoration: InputDecoration(
+      hintText: isCompanyConectedDateField ? 'Pic Company Connected Date' : 'Created Date : Today',
+      focusedBorder: UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.secondaryColor),
+      ),
+      disabledBorder: InputBorder.none,
+    ),
+  );
+}
+
 List<DropdownMenuItem<String>> _dropDownMenuItems() {
   return status.map((String element) {
     return DropdownMenuItem<String>(
@@ -154,9 +184,10 @@ Widget _addSectionButton(
   bool isSaveButton = false,
   bool isToEdit = false,
   int? index,
+  bool setCompanyConnectedDate = false,
 }) {
   return InkWell(
-    onTap: () {
+    onTap: () async {
       if (isSaveButton) {
         if (context
             .read<SelfAppliedCompaniesProvider>()
@@ -174,15 +205,17 @@ Widget _addSectionButton(
           }
           context.read<SelfAppliedCompaniesProvider>().clearInputs();
           Navigator.of(context).pop();
+          SnackbarHelper(context: context).showSnackbar(message: 'Loading...');
           context
               .read<SelfAppliedCompaniesProvider>()
               .reloadDelaidWithoutLodingIndication();
         }
       } else {
-        showDatePicker(
-            context: context,
-            firstDate: DateTime.now(),
-            lastDate: DateTime(2090));
+        if (setCompanyConnectedDate) {
+          context
+              .read<SelfAppliedCompaniesProvider>()
+              .setCompanyConnectedDate(context);
+        }
       }
     },
     child: Container(

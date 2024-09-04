@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:jobscope/app_styles/app_styles.dart';
 import 'package:jobscope/constants/graph_dash_values.dart';
 import 'package:jobscope/models/self_applied_companies_model.dart';
+import 'package:jobscope/services/date_time_to_date_string.dart';
 import 'package:jobscope/services/date_time_to_google_sheet_serial_number.dart';
+import 'package:jobscope/services/exel_date_convertor.dart';
 import 'package:jobscope/services/googe_sheet.dart';
 
-class SelfAppliedCompaniesProvider extends ChangeNotifier {
+class SelfAppliedCompaniesProvider extends ChangeNotifier { 
   bool isCardDataLoading = true;
   bool doHaveTodayData = false;
   bool doHaveGrandData = false;
@@ -13,6 +16,9 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
   List<SelfAppliedCompaniesModel> _selfAppliedCompaniesList = [];
   List<SelfAppliedCompaniesModel> _todayAppliedCompaniesList = [];
   Timer? _debounce;
+
+  TextEditingController searchController = TextEditingController();
+
 
   int totalAppliedCompany = 0;
 
@@ -39,6 +45,13 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
   TextEditingController remarksController = TextEditingController();
   String currentStatus = 'No response after application';
 
+  DateTime? createDate = DateTime.now();
+  DateTime? companyConnectedDateTime;
+
+  TextEditingController createdDateController = TextEditingController();
+  TextEditingController companyConnectedDateController =
+      TextEditingController();
+
   void fechDataFromSheet() async {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -61,6 +74,9 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
     await Future.delayed(const Duration(seconds: 2));
     _selfAppliedCompaniesList = await GoogleSheet.getAll();
     selfAppliedCompaniesList = _selfAppliedCompaniesList;
+    if (searchController.text.isNotEmpty) {
+      searchByTitle(searchController.text);
+    }
     setUpGrandGraphData();
     setGoalCount();
     notifyListeners();
@@ -181,30 +197,46 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void appendRowToSheet() {
-    GoogleSheet.appendData([
-      '',
+  void appendRowToSheet() async {
+    currentStatus = 'No response after application';
+    int? addedRowNumber = await GoogleSheet.appendData([
+      createdDateController.text.replaceAll('Created Date : ', ''),
       companyNameController.text,
       emailIdController.text,
       currentStatus,
-      '',
+      companyConnectedDateController.text
+          .replaceAll('Company Connected Date : ', ''),
       contactedPersonNameController.text,
       contactedPersonNumberController.text,
       callRecordingLinkController.text,
       remarksController.text
     ]);
+    setSheetColorSwich(currentStatus, addedRowNumber);
   }
 
   void deleteRowFromSheet(int rowIndex) {
     GoogleSheet.deleteRow(rowIndex);
-    reloadDelaidWithoutLodingIndication();
+    
   }
 
   void updateRowFromSheet(int index, bool setEditable) {
     if (setEditable) {
+      clearInputs();
+      currentStatus = 'No response after application';
+      if (selfAppliedCompaniesList[index].date.isNotEmpty) {
+        createdDateController.text = exelDateConvertor(
+            int.tryParse(selfAppliedCompaniesList[index].date) ?? 0);
+      }
+      if (selfAppliedCompaniesList[index].companyConnectedDate.isNotEmpty) {
+        companyConnectedDateController.text = exelDateConvertor(int.tryParse(
+                selfAppliedCompaniesList[index].companyConnectedDate) ??
+            0);
+      }
+
       companyNameController.text = selfAppliedCompaniesList[index].companyName;
       emailIdController.text = selfAppliedCompaniesList[index].emailId;
       currentStatus = selfAppliedCompaniesList[index].currentStatus;
+
       contactedPersonNameController.text =
           selfAppliedCompaniesList[index].contactPersonName;
       contactedPersonNumberController.text =
@@ -213,27 +245,130 @@ class SelfAppliedCompaniesProvider extends ChangeNotifier {
           selfAppliedCompaniesList[index].callRecording;
       remarksController.text = selfAppliedCompaniesList[index].remarks;
     } else {
+
       GoogleSheet.editRow(selfAppliedCompaniesList[index].rowNumber, [
-        '',
+        createdDateController.text.replaceAll('Created Date : ', ''),
         companyNameController.text,
         emailIdController.text,
         currentStatus,
-        '',
+        companyConnectedDateController.text,
         contactedPersonNameController.text,
         contactedPersonNumberController.text,
         callRecordingLinkController.text,
         remarksController.text
       ]);
+
+      setSheetColorSwich(
+          currentStatus, selfAppliedCompaniesList[index].rowNumber);
     }
+  }
+
+  void setCompanyConnectedDate(BuildContext context) async {
+    companyConnectedDateTime = await showDatePicker(
+      context: context,
+      firstDate: DateTime(2004),
+      lastDate: DateTime(2090),
+      initialDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                    secondary: AppColors.dangerColor,
+                    primary: AppColors.secondaryColor,
+                    surface: AppColors.greyColor),
+                dialogBackgroundColor: AppColors.dangerColor,
+                textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryColor))),
+            child: child!);
+      },
+    );
+
+    if (companyConnectedDateTime != null) {
+      companyConnectedDateController.text =
+          'Company Connected Date : ${dateTimeToDateString(companyConnectedDateTime!)}';
+      notifyListeners();
+    }
+  }
+
+  void setCreatedDateToday() {
+    if (createDate == null) {
+      createDate = DateTime.now();
+    }
+    createdDateController.text =
+        'Created Date : ${dateTimeToDateString(createDate!)}';
+    notifyListeners();
+  }
+
+  void setCreateDateCustom(BuildContext context) async {
+    createDate = await showDatePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2090),
+      builder: (context, child) {
+        return Theme(
+            data: Theme.of(context).copyWith(
+                colorScheme: ColorScheme.light(
+                    secondary: AppColors.dangerColor,
+                    primary: AppColors.secondaryColor,
+                    surface: AppColors.greyColor),
+                dialogBackgroundColor: AppColors.dangerColor,
+                textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                        foregroundColor: AppColors.primaryColor))),
+            child: child!);
+      },
+    );
+    if (createDate != null) {
+      createdDateController.text =
+          'Created Date : ${dateTimeToDateString(createDate!)}';
+    }
+
+    notifyListeners();
   }
 
   void clearInputs() {
     companyNameController.clear();
     emailIdController.clear();
-    currentStatus = 'No response after application';
     contactedPersonNameController.clear();
     contactedPersonNumberController.clear();
     callRecordingLinkController.clear();
     remarksController.clear();
+    companyConnectedDateController.clear();
+    createdDateController.clear();
+  }
+}
+
+void setSheetColorSwich(String stuatus, int? addedRowNumber) {
+  switch (stuatus) {
+    case 'Rejected by me' || 'Rejected by company':
+      if (addedRowNumber != null) {
+        GoogleSheet.setColorToARow(
+            addedRowNumber, StatusColorsForSheet.red3Color);
+      }
+      break;
+    case 'Aptitude test completed' ||
+          'HR round completed' ||
+          'Technical round completed' ||
+          'Final round completed' ||
+          'Face to Face Interview Done' ||
+          'Interview Scheduled' ||
+          'Machine Test Received':
+      if (addedRowNumber != null) {
+        GoogleSheet.setColorToARow(
+            addedRowNumber, StatusColorsForSheet.yellow3Color);
+      }
+      break;
+    case 'Got an offer':
+      if (addedRowNumber != null) {
+        GoogleSheet.setColorToARow(
+            addedRowNumber, StatusColorsForSheet.green3Color);
+      }
+      break;
+    default:
+      if (addedRowNumber != null) {
+        GoogleSheet.setColorToARow(
+            addedRowNumber, StatusColorsForSheet.whiteColor);
+      }
   }
 }

@@ -39,8 +39,12 @@ class StatusColors {
   static Color color12 = const Color.fromARGB(255, 83, 67, 64);
   static Color color13 = const Color.fromARGB(255, 65, 21, 48);
   static Color color14 = const Color.fromARGB(255, 22, 22, 22);
+  static Color rr = const Color.fromARGB(255, 238, 205, 205);
 }
 
 class StatusColorsForSheet {
-  static Map<String, double> testColor = {'a':255, 'r': 255, 'g': 137, 'b': 137};
+  static Map<String, double> whiteColor = {'a':255, 'r': 255, 'g': 255, 'b': 255};
+  static Map<String, double> red3Color = {'a':255, 'r': 238, 'g': 205, 'b': 205};
+  static Map<String, double> yellow3Color = {'a':255, 'r': 255, 'g': 242, 'b': 204};
+  static Map<String, double> green3Color = {'a':255, 'r': 217, 'g': 234, 'b': 211};
 }
